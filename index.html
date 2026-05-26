@@ -30,7 +30,7 @@
             padding: 2.5rem;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
         }
 
@@ -47,22 +47,47 @@
             margin-bottom: 2rem;
         }
 
-        .menu-options {
+        .continent-section {
+            background-color: #f5f5f7;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .continent-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1rem;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .modes-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .btn {
             background-color: var(--accent-color);
             color: white;
             text-decoration: none;
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
+            text-align: center;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 113, 227, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 113, 227, 0.15);
         }
 
         .btn:hover {
@@ -70,12 +95,16 @@
             transform: translateY(-1px);
         }
 
-        .btn.disabled {
-            background-color: #e8e8ed;
-            color: #86868b;
+        .btn-secondary {
+            background-color: #ffffff;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
             box-shadow: none;
-            cursor: not-allowed;
-            pointer-events: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 113, 227, 0.05);
+            transform: translateY(-1px);
         }
 
         .footer-note {
@@ -89,15 +118,28 @@
 
     <div class="container">
         <h1>Repassem les Capitals! 🌍</h1>
-        <p>Demostra el que saps i tria un continent per a començar a jugar.</p>
+        <p>Tria un continent i el teu mode de joc preferit.</p>
         
-        <div class="menu-options">
-            <a href="asia.html" class="btn">🌏 Continent d'Àsia</a>
-            <a href="africa.html" style="opacity: 0.6;">🌍 Continent d'Àfrica</a>
+        <!-- SECCIÓ ÀSIA -->
+        <div class="continent-section">
+            <div class="continent-title">🌏 Continent d'Àsia</div>
+            <div class="modes-grid">
+                <a href="asia.html" class="btn">Opció Múltiple (Test)</a>
+                <a href="asia_escriure.html" class="btn btn-secondary">Escriure la Capital</a>
+            </div>
+        </div>
+
+        <!-- SECCIÓ ÀFRICA -->
+        <div class="continent-section">
+            <div class="continent-title">🌍 Continent d'Àfrica</div>
+            <div class="modes-grid">
+                <a href="africa.html" class="btn">Opció Múltiple (Test)</a>
+                <a href="africa_escriure.html" class="btn btn-secondary">Escriure la Capital</a>
+            </div>
         </div>
 
         <div class="footer-note">
-            Dissenyat per a aprendre d'una forma divertida.
+            Dissenyat per a aprendre i posar-se a prova.
         </div>
     </div>
 

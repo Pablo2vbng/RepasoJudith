@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escriure: Capitals d'Àsia</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-color: #1d1d1f;
+            --accent-color: #0071e3;
+            --success-color: #34c759;
+            --error-color: #ff3b30;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 550px;
+            width: 90%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            background-color: #e8e8ed;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-box h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .text-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 1rem;
+            border: 2px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .feedback-box {
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-top: 1rem;
+            display: none;
+            text-align: left;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background-color: rgba(52, 199, 89, 0.15);
+            color: #1a6229;
+            border: 1px solid var(--success-color);
+        }
+
+        .feedback-box.wrong {
+            display: block;
+            background-color: rgba(255, 59, 48, 0.15);
+            color: #aa1c14;
+            border: 1px solid var(--error-color);
+        }
+
+        .result-box {
+            text-align: center;
+            display: none;
+        }
+
+        .result-box h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-text {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            background-color: #0077ed;
+        }
+
+        .menu-btn {
+            background-color: #86868b;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div id="quiz-screen">
+            <div class="header">
+                <a href="index.html" class="back-link">← Tornar al menú</a>
+                <span id="question-counter">Pregunta 1 de 10</span>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+
+            <div class="question-box">
+                <h2 id="question-text">Quina és la capital de...?</h2>
+                <div class="input-container">
+                    <input type="text" id="user-answer" class="text-input" placeholder="Escriu ací la capital..." autocomplete="off">
+                    <button class="action-btn" id="submit-btn" onclick="processAnswer()">Comprovar resposta</button>
+                </div>
+                <div id="feedback" class="feedback-box"></div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="result-box">
+            <h2>🎉 Joc acabat!</h2>
+            <p class="score-text" id="score-report">Has encertat 0 de 10 preguntes.</p>
+            <button class="action-btn" onclick="restartQuiz()">Tornar a jugar</button>
+            <a href="index.html" class="menu-btn">Menú principal</a>
+        </div>
+    </div>
+
+    <script>
+        const asiaData = [
+            { pais: "l'Afganistan", capital: "Kabul" },
+            { pais: "l'Aràbia Saudita", capital: "Riad" },
+            { pais: "Armènia", capital: "Erevan" },
+            { pais: "l'Azerbaidjan", capital: "Bakú" },
+            { pais: "Bahrein", capital: "Manama" },
+            { pais: "Bangladesh", capital: "Dacca" },
+            { pais: "Bhutan", capital: "Thimphu" },
+            { pais: "Brunei", capital: "Bandar Seri Begawan" },
+            { pais: "Cambodja", capital: "Phnom Penh" },
+            { pais: "la Xina", capital: "Pequín" },
+            { pais: "Xipre", capital: "Nicòsia" },
+            { pais: "Corea del Nord", capital: "Pyongyang" },
+            { pais: "Corea del Sud", capital: "Seül" },
+            { pais: "els Emirats Àrabs Units", capital: "Abu Dhabi" },
+            { pais: "les Filipines", capital: "Manila" },
+            { pais: "Geòrgia", capital: "Tbilisi" },
+            { pais: "l'Índia", capital: "Nova Delhi" },
+            { pais: "Indonèsia", capital: "Jakarta" },
+            { pais: "l'Iran", capital: "Teheran" },
+            { pais: "l'Iraq", capital: "Bagdad" },
+            { pais: "Israel", capital: "Jerusalem" },
+            { pais: "el Japó", capital: "Tòquio" },
+            { pais: "Jordània", capital: "Amman" },
+            { pais: "el Kazakhstan", capital: "Astanà" },
+            { pais: "el Kirguizistan", capital: "Bixkek" },
+            { pais: "Kuwait", capital: "Al-Kuwait" },
+            { pais: "Laos", capital: "Vientiane" },
+            { pais: "el Líban", capital: "Beirut" },
+            { pais: "Malàisia", capital: "Kuala Lumpur" },
+            { pais: "les Maldives", capital: "Malé" },
+            { pais: "Mongòlia", capital: "Ulan Bator" },
+            { pais: "Myanmar (Birmània)", capital: "Naypyidaw" },
+            { pais: "el Nepal", capital: "Katmandú" },
+            { pais: "l'Oman", capital: "Masqat" },
+            { pais: "el Pakistan", capital: "Islamabad" },
+            { pais: "Qatar", capital: "Doha" },
+            { pais: "Rússia", capital: "Moscou" },
+            { pais: "Singapur", capital: "Singapur" },
+            { pais: "Síria", capital: "Damasc" },
+            { pais: "Sri Lanka", capital: "Sri Jayawardenepura Kotte" },
+            { pais: "Tailàndia", capital: "Bangkok" },
+            { pais: "Taiwan", capital: "Taipei" },
+            { pais: "el Tadjikistan", capital: "Duixanbe" },
+            { pais: "Timor Oriental", capital: "Dili" },
+            { pais: "Turquia", capital: "Ankara" },
+            { pais: "el Turkmenistan", capital: "Asgabat" },
+            { pais: "l'Uzbekistan", capital: "Taixkent" },
+            { pais: "el Vietnam", capital: "Hanoi" },
+            { pais: "el Iemen", capital: "Sana" }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestionsCount = 10;
+
+        // Escoltar la tecla Enter per a respondre ràpidament
+        document.getElementById("user-answer").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                processAnswer();
+            }
+        });
+
+        function startQuiz() {
+            const shuffled = [...asiaData].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, totalQuestionsCount);
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("feedback").style.display = "none";
+            document.getElementById("user-answer").disabled = false;
+            document.getElementById("submit-btn").disabled = false;
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            
+            document.getElementById("question-counter").innerText = `Pregunta ${currentQuestionIndex + 1} de ${totalQuestionsCount}`;
+            const progressPercent = (currentQuestionIndex / totalQuestionsCount) * 100;
+            document.getElementById("progress").style.width = `${progressPercent}%`;
+            
+            document.getElementById("question-text").innerText = `Quina és la capital de ${currentQuestion.pais}?`;
+            
+            const inputField = document.getElementById("user-answer");
+            inputField.value = "";
+            inputField.disabled = false;
+            inputField.focus();
+            
+            document.getElementById("feedback").style.display = "none";
+            
+            const submitBtn = document.getElementById("submit-btn");
+            submitBtn.innerText = "Comprovar resposta";
+            submitBtn.onclick = processAnswer;
+        }
+
+        function processAnswer() {
+            const inputField = document.getElementById("user-answer");
+            const userAnswer = inputField.value.trim();
+            if (userAnswer === "") return; // No fer res si està buit
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            const feedbackBox = document.getElementById("feedback");
+            
+            inputField.disabled = true;
+            
+            // Comprovació tolerant a majúscules/minúscules
+            if (userAnswer.toLowerCase() === currentQuestion.capital.toLowerCase()) {
+                feedbackBox.className = "feedback-box correct";
+                feedbackBox.innerText = `✨ Molt bé! És correcta.`;
+                score++;
+            } else {
+                feedbackBox.className = "feedback-box wrong";
+                feedbackBox.innerText = `❌ Oh, no! La resposta correcta era: ${currentQuestion.capital}.`;
+            }
+            
+            const submitBtn = document.getElementById("submit-btn");
+            submitBtn.innerText = "Següent pregunta →";
+            submitBtn.onclick = nextQuestion;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestionsCount) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById("progress").style.width = "100%";
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            
+            let message = "";
+            if(score === totalQuestionsCount) {
+                message = `🌟 Excel·lent! Eres una autèntica experta d'Àsia! Encertades: ${score} de ${totalQuestionsCount}.`;
+            } else if(score >= 7) {
+                message = `👏 Molt bé! Escrius les capitals perfectament. Encertades: ${score} de ${totalQuestionsCount}.`;
+            } else if(score >= 5) {
+                message = `👍 Vas pel bon camí! Segueix practicant. Encertades: ${score} de ${totalQuestionsCount}.`;
+            } else {
+                message = `📚 Ànim! Escriure és més difícil, però practicant t'en recordaràs de totes. Encertades: ${score} de ${totalQuestionsCount}.`;
+            }
+            
+            document.getElementById("score-report").innerText = message;
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        window.onload = startQuiz;
+    </script>
+</body>
+</html>
