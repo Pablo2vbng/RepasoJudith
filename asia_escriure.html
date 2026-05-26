@@ -32,6 +32,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             max-width: 550px;
             width: 90%;
+            margin: 20px 0;
         }
 
         .header {
@@ -125,7 +126,50 @@
 
         .score-text {
             font-size: 1.3rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Estils per a la llista de fallades */
+        .review-container {
+            text-align: left;
+            margin: 1.5rem 0;
+            background-color: #f5f5f7;
+            padding: 1rem;
+            border-radius: 14px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .review-title {
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #e8e8ed;
+            padding: 0.6rem 0;
+            font-size: 0.95rem;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-country {
+            font-weight: 600;
+        }
+
+        .review-wrong-ans {
+            color: var(--error-color);
+            text-decoration: line-through;
+            margin-right: 8px;
+        }
+
+        .review-correct-ans {
+            color: var(--success-color);
+            font-weight: 500;
         }
 
         .action-btn {
@@ -185,6 +229,13 @@
         <div id="result-screen" class="result-box">
             <h2>🎉 Joc acabat!</h2>
             <p class="score-text" id="score-report">Has encertat 0 de 10 preguntes.</p>
+            
+            <!-- Contenidor dinàmic per a la llista de fallades -->
+            <div id="review-section" class="review-container">
+                <div class="review-title">📝 Repassa les teues errades:</div>
+                <div id="review-list"></div>
+            </div>
+
             <button class="action-btn" onclick="restartQuiz()">Tornar a jugar</button>
             <a href="index.html" class="menu-btn">Menú principal</a>
         </div>
@@ -246,9 +297,9 @@
         let currentQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
+        let mistakes = []; // Ací guardarem les errades de la partida
         const totalQuestionsCount = 10;
 
-        // Escoltar la tecla Enter per a respondre ràpidament
         document.getElementById("user-answer").addEventListener("keyup", function(event) {
             if (event.key === "Enter") {
                 processAnswer();
@@ -260,6 +311,7 @@
             currentQuestions = shuffled.slice(0, totalQuestionsCount);
             currentQuestionIndex = 0;
             score = 0;
+            mistakes = [];
             
             document.getElementById("quiz-screen").style.display = "block";
             document.getElementById("result-screen").style.display = "none";
@@ -294,14 +346,13 @@
         function processAnswer() {
             const inputField = document.getElementById("user-answer");
             const userAnswer = inputField.value.trim();
-            if (userAnswer === "") return; // No fer res si està buit
+            if (userAnswer === "") return;
 
             const currentQuestion = currentQuestions[currentQuestionIndex];
             const feedbackBox = document.getElementById("feedback");
             
             inputField.disabled = true;
             
-            // Comprovació tolerant a majúscules/minúscules
             if (userAnswer.toLowerCase() === currentQuestion.capital.toLowerCase()) {
                 feedbackBox.className = "feedback-box correct";
                 feedbackBox.innerText = `✨ Molt bé! És correcta.`;
@@ -309,6 +360,13 @@
             } else {
                 feedbackBox.className = "feedback-box wrong";
                 feedbackBox.innerText = `❌ Oh, no! La resposta correcta era: ${currentQuestion.capital}.`;
+                
+                // Guardem l'errada: país, la resposta incorrecta de la xiqueta i la correcta real
+                mistakes.push({
+                    pais: currentQuestion.pais,
+                    incorrecta: userAnswer,
+                    correcta: currentQuestion.capital
+                });
             }
             
             const submitBtn = document.getElementById("submit-btn");
@@ -342,6 +400,23 @@
             }
             
             document.getElementById("score-report").innerText = message;
+
+            // Renderitzar la llista d'errades si n'hi han
+            const reviewSection = document.getElementById("review-section");
+            const reviewList = document.getElementById("review-list");
+            reviewList.innerHTML = "";
+
+            if (mistakes.length > 0) {
+                reviewSection.style.display = "block";
+                mistakes.forEach(item => {
+                    const div = document.createElement("div");
+                    div.classList.add("review-item");
+                    div.innerHTML = `<span class="review-country">${item.pais}:</span> Tu has escrit "<span class="review-wrong-ans">${item.incorrecta}</span>", la correcta era <span class="review-correct-ans">${item.correcta}</span>.`;
+                    reviewList.appendChild(div);
+                });
+            } else {
+                reviewSection.style.display = "none"; // Si té 10/10 amaguem la caixa de repàs
+            }
         }
 
         function restartQuiz() {
