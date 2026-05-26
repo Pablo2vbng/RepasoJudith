@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joc de les Capitals del Món</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-color: #1d1d1f;
+            --accent-color: #0071e3;
+            --accent-hover: #0077ed;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: #86868b;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 113, 227, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn.disabled {
+            background-color: #e8e8ed;
+            color: #86868b;
+            box-shadow: none;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #a1a1a6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Repassem les Capitals! 🌍</h1>
+        <p>Demostra el que saps i tria un continent per a començar a jugar.</p>
+        
+        <div class="menu-options">
+            <a href="asia.html" class="btn">🌏 Continent d'Àsia</a>
+            <a href="africa.html" class="btn disabled" style="opacity: 0.6;">🌍 Continent d'Àfrica</a>
+        </div>
+
+        <div class="footer-note">
+            Dissenyat per a aprendre d'una forma divertida.
+        </div>
+    </div>
+
+</body>
+</html>
